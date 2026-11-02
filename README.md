@@ -2,7 +2,7 @@
 
 A direct-delivery SMTP server—it accepts emails from clients and forwards them to recipients directly via **DNS MX Lookup** (without an intermediate relay).
 
-## Features
+**Features:**
 - Email reception
 - Direct delivery to the recipient
 - STARTTLS during delivery, if supported by the recipient
