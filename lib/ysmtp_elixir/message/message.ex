@@ -15,4 +15,28 @@ defmodule YsmtpElixir.Message do
       _ -> {:error, :invalid_email}
     end
   end
+
+  def extract_text({"text", "plain", _headers, _params, body}), do: body
+
+  def extract_text({"multipart", _subtype, _headers, _params, parts}) when is_list(parts) do
+    Enum.find_value(parts, &extract_text/1)
+  end
+
+  def extract_text(_other), do: nil
+
+  def parse(data) do
+    try do
+      decoded = :mimemail.decode(data, encoding: :none)
+      {:ok, decoded}
+    catch
+      _kind, _reason -> {:error, :unparseable}
+    end
+  end
+
+  defp subject(headers) do
+    case List.keyfind(headers, "Subject", 0) do
+      {"Subject", value} -> value
+      nil -> ""
+    end
+  end
 end
